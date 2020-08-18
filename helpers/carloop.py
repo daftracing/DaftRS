@@ -217,7 +217,7 @@ def carloop_init(speed):
 	if not check_firmware():
 		if manualfw(model):
 			if not check_firmware():
-				print("\n[!] Please manually install Daftracing firmware from firmware/DaftLoop.ino")
+				print("\n[!] Please manually install Daftracing firmware from firmware/SoftStick.ino")
 				return False
 		else:
 			return False
