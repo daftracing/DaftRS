@@ -43,11 +43,13 @@ def particle_flash():
 
 def particle_update():
 	wait_for_usb(dfu=True)
-	output = run("particle update", shell=True)
 	sleep(1)
-	if not "!!!" in output:
-		return True
-	return False
+
+	while True:
+		output = run("particle update", shell=True)
+		if not "!!!" in output:
+			return True
+		sleep(3)
 
 def wait_for_particle():
 	output = run("particle usb list --ids-only | grep -i -v ERROR", shell=True)
