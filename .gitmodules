@@ -1,0 +1,6 @@
+[submodule "tools"]
+	path = tools
+	url = https://github.com/daftracing/VBFlasher
+[submodule "firmware"]
+	path = firmware
+	url = https://github.com/daftracing/SoftStick
