@@ -34,7 +34,7 @@ def particle_dfu():
 
 def particle_flash():
 	wait_for_particle()
-	output = run("particle flash --usb firmware/DaftLoop.bin", shell=True)
+	output = run("particle flash --usb firmware/SoftStick.bin", shell=True)
 	sleep(1)
 	if not "!!!" in output:
 		return True
@@ -99,30 +99,34 @@ def check_usb():
 	return False
 
 
-def info_manualfw(model):
+def manualfw(model):
 	if model == '06':
-		print('''
-[*] Flashing DaftRacing firmware, put your Particle into DFU mode:
-\t1) Press and hold both the RESET/RST and MODE/SETUP buttons simultaneously.
-\t2) Release only the RESET/RST button while continuing to hold the MODE/SETUP button.
-\t3) Release the MODE/SETUP button once the device begins to blink yellow.
-\t4) Reconnect Particle DFU to this VM
-\t5) Press return''');
-		input()
-	
-		sleep(5)
-		wait_for_usb(dfu=True)
-		print('\n[ ] Updating Particle (needs internet connection!)... ', end='')
-		if not particle_update():
-			print('Failed!\r\n[!')
-			return False
+		print('\n[*] Flashing DaftRacing firmware...')
+		updated = False
+		while not updated:
+			print('''[>] Put your Particle into DFU mode:
+	\t1) Press and hold both the RESET/RST and MODE/SETUP buttons simultaneously.
+	\t2) Release only the RESET/RST button while continuing to hold the MODE/SETUP button.
+	\t3) Release the MODE/SETUP button once the device begins to blink yellow.
+	\t4) Reconnect Particle DFU to this VM
+	\t5) Press return''');
+			input()
+		
+			sleep(5)
+			wait_for_usb(dfu=True)
+			print('\n[ ] Updating Particle (needs internet connection!)... ', end='')
+			if not particle_update():
+				print('Failed to connect!\r[-')
+			else:
+				updated = True
+
 		print('OK\r[+')
 
 		sleep(5)	
 		wait_for_particle()
 		print('\n[ ] Going back to DFU... ', end='')
 		if not particle_dfu():
-			print('Failed!\r\n[!')
+			print('Failed!\r[!')
 			return False
 		print('OK\r[+')
 	
@@ -130,7 +134,7 @@ def info_manualfw(model):
 		wait_for_particle()
 		print('\n[ ] Flashing the firmware... ', end='')
 		if not particle_flash():
-			print('Failed!\r\n[!')
+			print('Failed!\r[!')
 			return False
 		print('OK\r[+')
 
@@ -139,7 +143,7 @@ def info_manualfw(model):
 		return True
 
 	else:
-		print('\nHint: Register your device and flash firmware/DaftLoop.ino using Particle Web IDE (https://build.particle.io/build)')
+		print('\nHint: Register your device and flash firmware/SoftStick.ino using Particle Web IDE (https://build.particle.io/build)')
 		return False
 
 
@@ -211,7 +215,7 @@ def carloop_init(speed):
 		return False
 
 	if not check_firmware():
-		if info_manualfw(model):
+		if manualfw(model):
 			if not check_firmware():
 				print("\n[!] Please manually install Daftracing firmware from firmware/DaftLoop.ino")
 				return False
