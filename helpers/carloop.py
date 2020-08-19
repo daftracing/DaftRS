@@ -49,6 +49,7 @@ def particle_update():
 		output = run("particle update", shell=True)
 		if not "!!!" in output:
 			return True
+		print('.', end='')
 		sleep(3)
 
 def wait_for_particle():
