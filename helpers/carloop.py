@@ -49,7 +49,7 @@ def particle_update():
 		output = run("particle update", shell=True)
 		if not "!!!" in output:
 			return True
-		print('.', end='')
+		debug('.', end='')
 		sleep(3)
 
 def wait_for_particle():
@@ -58,11 +58,11 @@ def wait_for_particle():
 	if output:
 		return
 
-	print("\n[ ] Please reconnect Particle to this VM... ", end="")
+	debug("\n[ ] Please reconnect Particle to this VM... ", end="")
 	while not output:
 		output = run("particle usb list --ids-only | grep -i -v ERROR", shell=True)
 
-	print('OK\r[+')
+	debug('OK\r[+')
 
 
 def wait_for_usb(dfu=False):
@@ -76,38 +76,38 @@ def wait_for_usb(dfu=False):
 		return
 
 	if(dfu):
-		print("\n[ ] Please make sure you enabled DFU mode (blinking orange) and reconnect Particle to this VM... ", end='')
+		debug("\n[ ] Please make sure you enabled DFU mode (blinking orange) and reconnect Particle to this VM... ", end='')
 	else:
-		print("\n[ ] Please reconnect Particle to this VM... ", end='')
+		debug("\n[ ] Please reconnect Particle to this VM... ", end='')
 
 	while not output:
 		output = run("lsusb | grep 2b04:{}".format(suffix), shell=True)
 		sleep(1)
 
-	print('OK\r[+')
+	debug('OK\r[+')
 
 
 def check_usb():
-	print('[?] Checking USB connection... ', end='')
+	debug('[?] Checking USB connection... ', end='')
 
 	output = run("lsusb | grep 2b04", shell=True)
 	if output:
 		product = output.split(':')[2].split(' ')[0].strip()
 		model = product[2:]
-		print('OK\r[+')
+		debug('OK\r[+')
 		return model
 	else:
-		print("\n[!] No Particle device detected. Make sure it's connected to this Virtual Machine and try again.")
+		debug("\n[!] No Particle device detected. Make sure it's connected to this Virtual Machine and try again.")
 
 	return False
 
 
 def manualfw(model):
 	if model == '06':
-		print('\n[*] Flashing DaftRacing firmware...')
+		debug('\n[*] Flashing DaftRacing firmware...')
 		updated = False
 		while not updated:
-			print('''[>] Put your Particle into DFU mode:
+			debug('''[>] Put your Particle into DFU mode:
 	\t1) Press and hold both the RESET/RST and MODE/SETUP buttons simultaneously.
 	\t2) Release only the RESET/RST button while continuing to hold the MODE/SETUP button.
 	\t3) Release the MODE/SETUP button once the device begins to blink yellow.
@@ -117,36 +117,36 @@ def manualfw(model):
 		
 			sleep(5)
 			wait_for_usb(dfu=True)
-			print('\n[ ] Updating Particle (needs internet connection!)... ', end='')
+			debug('\n[ ] Updating Particle (needs internet connection!)...', end='')
 			if not particle_update():
-				print('Failed to connect!\r[-')
+				debug('Failed to connect!\r[-')
 			else:
 				updated = True
 
-		print('OK\r[+')
+		debug(' OK\r[+')
 
 		sleep(5)	
 		wait_for_particle()
-		print('\n[ ] Going back to DFU... ', end='')
+		debug('\n[ ] Going back to DFU... ', end='')
 		if not particle_dfu():
-			print('Failed!\r[!')
+			debug('Failed!\r[!')
 			return False
-		print('OK\r[+')
+		debug('OK\r[+')
 	
 		sleep(5)
 		wait_for_particle()
-		print('\n[ ] Flashing the firmware... ', end='')
+		debug('\n[ ] Flashing the firmware... ', end='')
 		if not particle_flash():
-			print('Failed!\r[!')
+			debug('Failed!\r[!')
 			return False
-		print('OK\r[+')
+		debug('OK\r[+')
 
 		sleep(3)
 		wait_for_particle()
 		return True
 
 	else:
-		print('\nHint: Register your device and flash firmware/SoftStick.ino using Particle Web IDE (https://build.particle.io/build)')
+		debug('\nHint: Register your device and flash firmware/SoftStick.ino using Particle Web IDE (https://build.particle.io/build)')
 		return False
 
 
@@ -154,15 +154,15 @@ def check_firmware():
 	sleep(5)
 	wait_for_particle()
 
-	print('\n[?] Looking for DaftRacing multimode firmware... ')
+	debug('\n[?] Looking for DaftRacing multimode firmware... ')
 
 	perror = run('particle usb list -v --ids-only | grep -i error', shell=True)
 	if perror:
-		print('[!] Device not recognized...')
+		debug('[!] Device not recognized...')
 		return False
 
 
-	print('\t[ ] Opening serial connection... ', end='', flush=True)
+	debug('\t[ ] Opening serial connection... ', end='')
 
 	lastacm = None
 	for a in glob.glob('/dev/ttyACM*'):
@@ -174,16 +174,16 @@ def check_firmware():
 	if not ser:
 		return False
 
-	print('OK\r\t[+')
+	debug('OK\r\t[+')
 
-	print('\t[?] Checking firmware version... ', end='', flush=True)
+	debug('\t[?] Checking firmware version... ', end='')
 	ser.write(b'v\r')
 	firmware = ser.readline()
 	ser.close()
 	if not firmware or not b'multimode' in firmware:
-		print('\r\t[-] No DaftRacing firmware found on this Particle device...')
+		debug('\r\t[-] No DaftRacing firmware found on this Particle device...')
 		return False
-	print('\r\t[+] Firmware: {}'.format(firmware.decode("utf-8")))
+	debug('\r\t[+] Firmware: {}'.format(firmware.decode("utf-8")))
 
 
 	return True
@@ -199,12 +199,12 @@ def iface(speed):
 		return Flase
 
 
-	print('[ ] Bringing CAN interface up (Particle should start fading green)... ', end='')
+	debug('[ ] Bringing CAN interface up (Particle should start fading green)... ', end='')
 	run('sudo slcand -s{} -f -o -c /dev/ttyACM*'.format(s), shell=True)
 	sleep(3)
 	run('sudo ifconfig slcan0 up', shell=True)
 	run('sudo ip link set txqueue 1000 dev slcan0', shell=True)
-	print('OK\r[+')
+	debug('OK\r[+')
 
 	return True
 
@@ -220,7 +220,7 @@ def carloop_init(speed):
 	if not check_firmware():
 		if manualfw(model):
 			if not check_firmware():
-				print("\n[!] Please manually install Daftracing firmware from firmware/SoftStick.ino")
+				debug("\n[!] Please manually install Daftracing firmware from firmware/SoftStick.ino")
 				return False
 		else:
 			return False
@@ -231,8 +231,8 @@ def carloop_init(speed):
 	return True
 
 def carloop_close():
-	print('[ ] Closing CAN interface... ', end='')
+	debug('[ ] Closing CAN interface... ', end='')
 	run('sudo killall slcand', shell=True)
-	print('OK\r[+\n[ ] Carloop reset... ', end='')
+	debug('OK\r[+\n[ ] Carloop reset... ', end='')
 	run('particle usb reset', shell=True)
-	print('OK\r[+\n')
+	debug('OK\r[+\n')

@@ -21,10 +21,14 @@ def die(str):
 	print(str)
 	sys.exit(-1)
 
-def debug(str):
+def debug(str, end='\n', level='print'):
 	global dbgon
 
-	if dbgon:
+	if level == 'print':
+		print(str, end=end)
+		sys.stdout.flush()
+
+	if level == 'debug' and dbgon:
 		print("[DBG] {}".format(str))
 
 def run(cmd, shell=False, timeout=None, stdout=PIPE):	
@@ -35,7 +39,7 @@ def run(cmd, shell=False, timeout=None, stdout=PIPE):
 	        os.killpg(process.pid, signal.SIGINT)
 	        output = process.communicate()[0]
 
-	debug(output)
+	debug(output, level='debug')
 	if output:
 		return output.decode("utf-8")
 	return None

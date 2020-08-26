@@ -32,7 +32,7 @@ def die(str):
 
 
 def rdu_help():
-	print("""Rear Drive Unit settings
+	debug("""Rear Drive Unit settings
 
 Available options:
 
@@ -50,7 +50,7 @@ def rdu_get(ecu):
 	if s[0] == 0x01:
 		status = "ON"
 
-	print("[?] RDU is currently {}".format(status))
+	debug("[?] RDU is currently {}".format(status))
 
 
 def rdu_set(ecu, mode):
@@ -98,7 +98,7 @@ def rdu(args):
 
 
 def pdc_help():
-	print("""Enable/Disable Pull Drift Compensation
+	debug("""Enable/Disable Pull Drift Compensation
 
 Available options:
 
@@ -116,7 +116,7 @@ def pdc_get(ecu):
 	if s[0] == 0x01:
 		status = "ON"
 
-	print("[?] PDC is currently {}".format(status))
+	debug("[?] PDC is currently {}".format(status))
 
 
 def pdc_set(ecu, mode):
@@ -170,7 +170,7 @@ def pdc(args):
 
 
 def feng_help():
-	print("""
+	debug("""
 Enable/Disable Fake Engine Noise Generator
 
 Available options:
@@ -189,7 +189,7 @@ def feng_get(ecu):
 	if s[0] == 0x01:
 		status = "ON"
 
-	print("[?] FENG is currently {}".format(status))
+	debug("[?] FENG is currently {}".format(status))
 
 
 def feng_on(ecu):
@@ -245,7 +245,7 @@ def feng(args):
 
 
 def pcm_help():
-	print("""
+	debug("""
 PCM toolset
 
 Available options:
@@ -339,7 +339,7 @@ def main():
 	if args.mode.lower() == "pats":
 		return pats(args)
 
-	print("[-] Unknown mode {} ...".format(args.mode))
+	debug("[-] Unknown mode {} ...".format(args.mode))
 
 
 if __name__ == '__main__':
