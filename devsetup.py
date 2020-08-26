@@ -14,6 +14,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 
 
 import sys
+sys.path.append('./tools')
 
 from tools.vbflasher import Vbflasher
 from helpers.carloop import *
@@ -25,7 +26,7 @@ def main():
 	else:
 		speed = sys.argv[1]
 
-	print("[>] Setting up Carloop to work with {}".format(speed))
+	debug("[>] Setting up Carloop to work with {}".format(speed))
 	return carloop_init(speed)
 
 

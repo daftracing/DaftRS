@@ -20,7 +20,7 @@ from helpers.carloop import *
 
 
 def warning():
-	print('''
+	debug('''
 [*] WARNING: DON'T LET THE LAPTOP FALL ASLEEP!!! Move mouse, etc. Breaking the flashing process can brick the module!
 
 [!] Make sure that:
@@ -33,7 +33,7 @@ def warning():
 	if input().lower() != 'y':
 		return False
 
-	print('''
+	debug('''
 [>] Great! Please follow the steps below:
 	1. Connect your Particle device to the computer's USB port but DO NOT plug it to the OBD port just yet
 	2. Connect it to this Virtual Machine (select Virtual Machine -> USB -> Connect Particle from the menu)
@@ -47,26 +47,39 @@ def warning():
 
 def choose_calibration():
 	calibrations = [
-		[ 'Stock', 'G1F7-14C368-AA.vbf', 'G1F7-14C366-AL.vbf', 'G1F7-14C367-AL.vbf' ],
-		[ 'DaftRDU T5 (+12%, 1700Nm limit)', 'G1F7-14C368-AA.vbf', 'G1F7-14C366-AL-DAFT-T5.vbf', 'G1F7-14C367-AL.vbf' ],
-		[ 'DaftRDU T11 [EXPERIMENTAL] (+25%, SWVEC OFF, 1700Nm limit)', 'G1F7-14C368-AA.vbf', 'G1F7-14C366-AL-DAFT-T11.vbf', 'G1F7-14C367-AL.vbf' ]
-
+		[ 'Stock', 'G1F7-14C366-AL.vbf'],
+		[ 'DaftRDU T5 (+12%, 1700Nm limit)', 'G1F7-14C366-AL-DAFT-T5.vbf' ],
+		[ 'DaftRDU T11 [EXPERIMENTAL] (+25%, SWVEC OFF, 1700Nm limit)', 'G1F7-14C366-AL-DAFT-T11.vbf' ],
+		[ 'DaftRDU T13 [EXPERIMENTAL] (+25%, SWVEC ON, 1700Nm limit)', 'G1F7-14C366-AL-DAFT-T13.vbf' ]
 	]
-	print('\n[ ] Which calibration to flash?')
+	debug('\n[ ] Which calibration to flash?')
 	i = 0
 	for c in calibrations:
-		print("\t[{}] {}".format(i, c[0]))
+		debug("\t[{}] {}".format(i, c[0]))
 		i += 1
-	print("[?] Type 0-{} and hit return... ".format(i-1), end='')
+	debug("[?] Type 0-{} and hit return... ".format(i-1), end='')
 	c = input()
 
+	datasets = [
+		[ 'Stock', 'G1F7-14C367-AL.vbf' ],
+		[ 'DaftRDU DS1 (170C RDU Oil Temp Limit)', 'G1F7-14C367-AL-DAFT-DS1.vbf' ],
+		[ 'DaftRDU DS3 (FWD in Normal DM + 170C)', 'G1F7-14C367-AL-DAFT-DS3.vbf' ]
+	]
+	debug('\n[ ] Which parameter set to flash?')
+	i = 0
+	for d in datasets:
+		debug("\t[{}] {}".format(i, d[0]))
+		i += 1
+	debug("[?] Type 0-{} and hit return... ".format(i-1), end='')
+	d = input()
+
 	try:
-		r = calibrations[int(c)]
+		r = [calibrations[int(c)], datasets[int(d)]]
 	except ValueError:
-		print('[!] Invalid calibration selected')
+		debug('[!] Invalid calibration / parameters selected')
 		return None
 	except IndexError:
-		print('[!] Invalid calibration selected')
+		debug('[!] Invalid calibration / parameters selected')
 		return None
 
 	return r
@@ -83,30 +96,30 @@ def main():
 	if not v:
 		return
 	
-	print('''\n[>] All set, we are good to go!
+	debug('''\n[>] All set, we are good to go!
 	1. Connect Carloop device to the OBD diagnostic port
 	2. Turn ON the ignition but do NOT start the engine
-	3. Hit return when ready to flash {}'''.format(v[0]))
+	3. Hit return when ready to flash {} / {}'''.format(v[0][0], v[1][0]))
 	input()
 
 	try:
-		flasher = Vbflasher(can_interface = 'slcan0', sbl_path='vbf/{}'.format(v[1]), exe_path='vbf/{}'.format(v[2]), \
-			data_path='vbf/{}'.format(v[3]))
+		flasher = Vbflasher(can_interface = 'slcan0', sbl_path='vbf/G1F7-14C368-AA.vbf', exe_path='vbf/{}'.format(v[0][1]), \
+			data_path='vbf/{}'.format(v[1][1]))
 	except OSError as e:
 		enum = e.args[0]
 		if enum == 19:
-			print('[!] Unable to open slcan0 device')
+			debug('[!] Unable to open slcan0 device')
 		return
 
-	print("\n[+] Successfully opened slcan0")
+	debug("\n[+] Successfully opened slcan0")
 
 	flasher.start()
 	flasher.flash()
 	flasher.ver()
 
-	print('[+] Flashing completed!\n')
+	debug('[+] Flashing completed!\n')
 
-	print('''[>] Final steps:
+	debug('''[>] Final steps:
 	1. Turn the ignition OFF
 	2. You can now safely disconnect Carloop
 	3. Start the engine

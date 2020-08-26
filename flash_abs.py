@@ -20,7 +20,7 @@ from helpers.carloop import *
 
 
 def warning():
-	print('''
+	debug('''
 [*] WARNING: Breaking the flashing process WILL brick the ABS module!
 [*] LEGAL: Please respect all the EULAs, IP rights, etc. Flash only the calibrations you are entitled to use!
 
@@ -35,7 +35,7 @@ def warning():
 	if input().lower() != 'y':
 		return False
 
-	print('''
+	debug('''
 [>] Great! Please follow the steps below:
 	1. Connect your Particle device to the computer's USB port but DO NOT plug it to the OBD port just yet
 	2. Connect it to this Virtual Machine (select Virtual Machine -> USB -> Connect Particle from the menu)
@@ -48,24 +48,24 @@ def warning():
 
 
 def check_calibration():
-	print('\n[?] Checking calibration files...')
+	debug('\n[?] Checking calibration files...')
 	while not os.path.isfile('3rdparty/G1FC-14C036-BA.tar.bz2'):
-		print('\t[-] No calibration files found. Try to download? (y/N) ', end='')
+		debug('\t[-] No calibration files found. Try to download? (y/N) ', end='')
 		if input().lower() == 'y':
 			run('megadl --path=3rdparty https://mega.nz/#!uMUn0Y7K!QE-TG9zWQJVYcAIJFxwWbDPqnQ2VqTA9DYKZn-GV3o4', shell=True, stdout=None)
 		else:
-			print('\t    Download G1FC-14C036-BA.tar.bz2 (https://mega.nz/#!uMUn0Y7K!QE-TG9zWQJVYcAIJFxwWbDPqnQ2VqTA9DYKZn-GV3o4)')
-			print('\t    and copy to "3rdparty" directory. Hit return when done.', end='')
+			debug('\t    Download G1FC-14C036-BA.tar.bz2 (https://mega.nz/#!uMUn0Y7K!QE-TG9zWQJVYcAIJFxwWbDPqnQ2VqTA9DYKZn-GV3o4)')
+			debug('\t    and copy to "3rdparty" directory. Hit return when done.', end='')
 			input()
 
-	print('\t[+] Extracting...')
+	debug('\t[+] Extracting...')
 	run('tar jxf 3rdparty/G1FC-14C036-BA.tar.bz2 -C /tmp', shell=True)
 	if os.path.isfile('/tmp/G1FC-14C036-BA.vbf') and os.path.isfile('/tmp/G1FC-14C381-BA.vbf') \
 		and os.path.isfile('/tmp/E3B1-14C039-AA.vbf'):
-		print('[+] OK\n')
+		debug('[+] OK\n')
 		return True
 	else:
-		print('[!] Broken archive! Aborting...')
+		debug('[!] Broken archive! Aborting...')
 		return False
 
 
@@ -78,7 +78,7 @@ def main():
 
 	carloop_init("HSCAN")
 
-	print('''\n[>] All set, we are good to go!
+	debug('''\n[>] All set, we are good to go!
 	1. Connect Carloop device to the OBD diagnostic port
 	2. Turn ON the ignition but do NOT start the engine
 	3. Hit return when ready''')
@@ -90,9 +90,9 @@ def main():
 	except OSError as e:
 		enum = e.args[0]
 		if enum == 19:
-			print('[!] Unable to open slcan0 device')
+			debug('[!] Unable to open slcan0 device')
 		return
-	print("\n[+] Successfully opened slcan0")
+	debug("\n[+] Successfully opened slcan0")
 
 	flasher.start()
 	flasher.flash()
@@ -100,7 +100,7 @@ def main():
 
 	carloop_close()
 
-	print('''[>] Final steps:
+	debug('''[>] Final steps:
 	1. You can now safely disconnect USB cable from Particle
 	2. Turn the ignition OFF, then ON and start the car
 	3. Particle will fade Gray, it's ready but will NOT drift
