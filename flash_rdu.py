@@ -49,8 +49,11 @@ def choose_calibration():
 	calibrations = [
 		[ 'Stock', 'G1F7-14C366-AL.vbf'],
 		[ 'DaftRDU T5 (+12%, 1700Nm limit)', 'G1F7-14C366-AL-DAFT-T5.vbf' ],
-		[ 'DaftRDU T11 [EXPERIMENTAL] (+25%, SWVEC OFF, 1700Nm limit)', 'G1F7-14C366-AL-DAFT-T11.vbf' ],
-		[ 'DaftRDU T13 [EXPERIMENTAL] (+25%, SWVEC ON, 1700Nm limit)', 'G1F7-14C366-AL-DAFT-T13.vbf' ]
+		[ 'DaftRDU T11 [EXP] (+25%, SWVEC OFF, 1700Nm limit)', 'G1F7-14C366-AL-DAFT-T11.vbf' ],
+		[ 'DaftRDU T13 [EXP] (+25%, SWVEC ON, 1700Nm limit)', 'G1F7-14C366-AL-DAFT-T13.vbf' ],
+		[ 'DaftRDU T14 [EXP] (+12%, uncapped)', 'G1F7-14C366-AL-DAFT-T14.vbf' ],
+		[ 'DaftRDU T15 [EXP] (+25%, uncapped)', 'G1F7-14C366-AL-DAFT-T15.vbf' ]
+
 	]
 	debug('\n[ ] Which calibration to flash?')
 	i = 0
