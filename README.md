@@ -11,7 +11,7 @@ https://store.carloop.io/products/carloop-basic
 
 or
 
-https://store.carloop.io/products/carloop + https://www.sparkfun.com/products/13774
+https://store.carloop.io/products/carloop + https://store.particle.io/collections/wifi/products/photon
 
 This is the preferred interface as custom Photon firmware (https://github.com/daftracing/Softstick)
 with additional features is part of the project.
