@@ -46,38 +46,64 @@ def warning():
 
 
 def choose_calibration():
-	calibrations = [
-		[ 'Stock', 'G1F7-14C366-AL.vbf'],
-		[ 'DaftRDU T5 (+12%, 1700Nm limit)', 'G1F7-14C366-AL-DAFT-T5.vbf' ],
-		[ 'DaftRDU T11 [EXP] (+25%, SWVEC OFF, 1700Nm limit)', 'G1F7-14C366-AL-DAFT-T11.vbf' ],
-		[ 'DaftRDU T13 [EXP] (+25%, SWVEC ON, 1700Nm limit)', 'G1F7-14C366-AL-DAFT-T13.vbf' ],
-		[ 'DaftRDU T14 [EXP] (+12%, uncapped)', 'G1F7-14C366-AL-DAFT-T14.vbf' ],
-		[ 'DaftRDU T15 [EXP] (+25%, uncapped)', 'G1F7-14C366-AL-DAFT-T15.vbf' ]
-
+	platform = [
+		"Ford Focus RS",
+		"Lincoln MKZ"
 	]
+	debug('\n[ ] Select platform:')
+	i = 0
+	for p in platform:
+		debug("\t[{}] {}".format(i, p))
+		i += 1
+	debug("[?] Type 0-{} and hit return... ".format(i-1), end='')
+	p = int(input())
+
+	calibrations = [
+		[
+			[ 'Stock', 'G1F7-14C366-AL.vbf'],
+			[ 'DaftRDU T5 (+12%, 1700Nm limit)', 'G1F7-14C366-AL-DAFT-T5.vbf' ],
+			[ 'DaftRDU T16 (LC: 2x1300Nm; +12%, 1700Nm limit)', 'G1F7-14C366-AL-DAFT-T16.vbf' ],
+			[ 'DaftRDU T11 [EXP] (+25%, SWVEC OFF, 1700Nm limit)', 'G1F7-14C366-AL-DAFT-T11.vbf' ],
+			[ 'DaftRDU T13 [EXP] (+25%, SWVEC ON, 1700Nm limit)', 'G1F7-14C366-AL-DAFT-T13.vbf' ],
+			[ 'DaftRDU T14 [EXP] (+12%, uncapped)', 'G1F7-14C366-AL-DAFT-T14.vbf' ],
+			[ 'DaftRDU T15 [EXP] (+25%, uncapped)', 'G1F7-14C366-AL-DAFT-T15.vbf' ],
+			[ 'DaftRDU X1 [CRAZY] (+50%, SWVEC OFF, uncapped)', 'G1F7-14C366-AL-DAFT-X1.vbf' ],
+		],
+		[
+			[ 'Stock', 'HP57-14C366-AG.vbf'],
+			[ 'DaftRDU T1 (+12%, 1700Nm limit)', 'HP57-14C366-AG-DAFT-T1.vbf' ],
+		]
+	]
+
 	debug('\n[ ] Which calibration to flash?')
 	i = 0
-	for c in calibrations:
+	for c in calibrations[p]:
 		debug("\t[{}] {}".format(i, c[0]))
 		i += 1
 	debug("[?] Type 0-{} and hit return... ".format(i-1), end='')
 	c = input()
 
 	datasets = [
-		[ 'Stock', 'G1F7-14C367-AL.vbf' ],
-		[ 'DaftRDU DS1 (170C RDU Oil Temp Limit)', 'G1F7-14C367-AL-DAFT-DS1.vbf' ],
-		[ 'DaftRDU DS3 (FWD in Normal DM + 170C)', 'G1F7-14C367-AL-DAFT-DS3.vbf' ]
+		[
+			[ 'Stock', 'G1F7-14C367-AL.vbf' ],
+			[ 'DaftRDU DS1 (170C RDU Oil Temp Limit)', 'G1F7-14C367-AL-DAFT-DS1.vbf' ],
+			[ 'DaftRDU DS3 (FWD in Normal DM + 170C)', 'G1F7-14C367-AL-DAFT-DS3.vbf' ]
+		],
+		[
+			[ 'Stock', 'HP57-14C367-AG.vbf' ]
+		]
 	]
+
 	debug('\n[ ] Which parameter set to flash?')
 	i = 0
-	for d in datasets:
+	for d in datasets[p]:
 		debug("\t[{}] {}".format(i, d[0]))
 		i += 1
 	debug("[?] Type 0-{} and hit return... ".format(i-1), end='')
 	d = input()
 
 	try:
-		r = [calibrations[int(c)], datasets[int(d)]]
+		r = [calibrations[p][int(c)], datasets[p][int(d)]]
 	except ValueError:
 		debug('[!] Invalid calibration / parameters selected')
 		return None
