@@ -67,6 +67,7 @@ def choose_calibration():
 			[ 'DaftRDU T13 [EXP] (+25%, SWVEC ON, 1700Nm limit)', 'G1F7-14C366-AL-DAFT-T13.vbf' ],
 			[ 'DaftRDU T14 [EXP] (+12%, uncapped)', 'G1F7-14C366-AL-DAFT-T14.vbf' ],
 			[ 'DaftRDU T15 [EXP] (+25%, uncapped)', 'G1F7-14C366-AL-DAFT-T15.vbf' ],
+			[ 'DaftRDU T17 [EXP] (LC: 2x1300Nm, +12%, uncapped)', 'G1F7-14C366-AL-DAFT-T17.vbf' ],
 			[ 'DaftRDU X1 [CRAZY] (+50%, SWVEC OFF, uncapped)', 'G1F7-14C366-AL-DAFT-X1.vbf' ],
 		],
 		[
