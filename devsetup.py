@@ -31,4 +31,5 @@ def main():
 
 
 if __name__ == '__main__':
-	main()
+	if not main():
+		debug("[!] Unable to bring up the interface. Wrong bus definition?")
