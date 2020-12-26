@@ -1,6 +1,7 @@
 #!/bin/bash
 
-for f in "G1F7-14C368-AA" "G1F7-14C366-AL" "G1F7-14C367-AL" "HP57-14C366-AG" "HP57-14C367-AG"; do
+for f in "G1F7-14C368-AA" "G1F7-14C366-AL" "G1F7-14C367-AL" "HP57-14C366-AG" "HP57-14C367-AG" \
+	    "F1FT-14C107-AA" "F1FT-14C104-AN" "F1FT-14C105-AH"; do
 	if [ ! -f "$f.vbf" ] ; then
 	    curl 'https://www.fordtechservice.dealerconnection.com/vdirs/wds/PCMReprogram/DSFM_DownloadFile.asp' --data-raw "filename=$f" --output $f.zip >/dev/null
 	    unzip $f.zip
@@ -21,3 +22,5 @@ bspatch ./G1F7-14C367-AL.vbf ./G1F7-14C367-AL-DAFT-DS1.vbf ./G1F7-14C367-AL-DAFT
 bspatch ./G1F7-14C367-AL.vbf ./G1F7-14C367-AL-DAFT-DS3.vbf ./G1F7-14C367-AL-DAFT-DS3.vbf.diff
 
 bspatch ./HP57-14C366-AG.vbf ./HP57-14C366-AG-DAFT-T1.vbf ./HP57-14C366-AG-DAFT-T1.vbf.diff
+
+bspatch ./F1FT-14C104-AN.vbf ./F1FT-14C104-AN-RSPROT.vbf ./F1FT-14C104-AN-RSPROT.vbf.diff

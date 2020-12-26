@@ -13,6 +13,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 import serial
 import glob
 from time import sleep
+import re
 
 from helpers.misc import *
 
@@ -192,7 +193,7 @@ def manualfw(model):
 	return False
 
 
-def check_firmware(model):
+def check_firmware(model, ver=False):
 	sleep(5)
 	debug('\n[?] Looking for DaftRacing multimode firmware... ')
 
@@ -227,6 +228,14 @@ def check_firmware(model):
 	if not firmware or not b'multimode' in firmware:
 		debug('\r\t[-] No DaftRacing firmware found on this Particle device...')
 		return False
+	if ver:
+		r = re.compile(".* v([0-9]+) build.*")
+		res = r.match(firmware.decode("utf-8"))
+		if not res or int(res[1]) < ver:
+			debug('\r\t[-] {} is too old, need to update...'.format(firmware.decode("utf-8")[:-1]))
+			return False
+
+
 	debug('\r\t[+] Firmware: {}'.format(firmware.decode("utf-8")))
 
 	return True
@@ -251,7 +260,7 @@ def iface(speed):
 	return True
 
 
-def carloop_init(speed):
+def carloop_init(speed, minver=False):
 	run('sudo killall slcand > /dev/null 2>&1', shell=True)
 
 	wait_for_usb()
@@ -259,9 +268,9 @@ def carloop_init(speed):
 	if not model:
 		return False
 
-	if not check_firmware(model):
+	if not check_firmware(model, minver):
 		if manualfw(model):
-			if not check_firmware(model):
+			if not check_firmware(model, minver):
 				debug("\n[!] Please manually install Daftracing firmware from firmware/SoftStick.ino")
 				return False
 		else:
